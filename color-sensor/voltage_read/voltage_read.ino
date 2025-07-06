@@ -19,76 +19,76 @@ void setup() {
 }
 
 void loop() {
-  float redVoltage = 0;
-  float greenVoltage = 0;
-  float blueVoltage = 0;
+    float redVoltageInitial = 0;
+    float greenVoltageInitial = 0;
+    float blueVoltageInitial = 0;
 
 
-  
-//  if (analogRead(readingRed) > 100) {
+    if (firstIteration) {
 
-//  }
 
-  if (digitalRead(readingGreen) == HIGH) {
-    greenVoltage = measureVoltage(voltagePin) - measureVoltage(groundPin);
-    Serial.print("Green: ");
-    Serial.println(greenVoltage);
-  }
-
-  else if (digitalRead(readingBlue) == HIGH) {
-    blueVoltage = measureVoltage(voltagePin) - measureVoltage(groundPin);
-    Serial.print("Blue: ");
-    Serial.println(blueVoltage);
-  }
-  else{
-      redVoltage = measureVoltage(voltagePin) - measureVoltage(groundPin);
-      Serial.print("Red: ");
-      Serial.println(redVoltage);
-  }
-
-  if (firstIteration && redVoltage && greenVoltage && blueVoltage) {
-    // Store first readings
-    initialRed = redVoltage;
-    initialGreen = greenVoltage;
-    initialBlue = blueVoltage;
-
-    Serial.println("Initial voltages stored:");
-    Serial.print("Red: "); Serial.println(initialRed);
-    Serial.print("Green: "); Serial.println(initialGreen);
-    Serial.print("Blue: "); Serial.println(initialBlue);
-
-    firstIteration = false;
-  } 
-  else if (!firstIteration && redVoltage && greenVoltage && blueVoltage) {
-    // Compare readings
-    float diffRed = abs(redVoltage - initialRed);
-    float diffGreen = abs(greenVoltage - initialGreen);
-    float diffBlue = abs(blueVoltage - initialBlue);
-
-    Serial.println("Voltage Differences:");
-    Serial.print("Red Diff: "); Serial.println(diffRed);
-    Serial.print("Green Diff: "); Serial.println(diffGreen);
-    Serial.print("Blue Diff: "); Serial.println(diffBlue);
-
-    if (diffRed > diffGreen && diffRed > diffBlue) {
-      Serial.println("Detected Color: RED");
-    } else if (diffGreen > diffRed && diffGreen > diffBlue) {
-      Serial.println("Detected Color: GREEN");
-    } else if (diffBlue > diffRed && diffBlue > diffGreen) {
-      Serial.println("Detected Color: BLUE");
-    } else {
-      Serial.println("Color unclear or mixed.");
+        if (digitalRead(readingGreen) == HIGH) {
+            greenVoltageInitial = measureVoltage(voltagePin) - measureVoltage(groundPin);
+            Serial.print("Inital Green: ");
+            Serial.println(greenVoltageInitial);
+        }
+        else if (digitalRead(readingBlue) == HIGH) {
+            blueVoltageInitial = measureVoltage(voltagePin) - measureVoltage(groundPin);
+            Serial.print("Initial Blue: ");
+            Serial.println(blueVoltageInitial);
+        }
+        else{
+            redVoltageInitial = measureVoltage(voltagePin) - measureVoltage(groundPin);
+            Serial.print("Initial Red: ");
+            Serial.println(redVoltageInitial);
+        }
+        firstIteration = false;
     }
+    else{
+        float redVoltage = 0;
+        float greenVoltage = 0;
+        float blueVoltage = 0;
 
-    // Optionally update for continuous tracking
-    initialRed = redVoltage;
-    initialGreen = greenVoltage;
-    initialBlue = blueVoltage;
-  }
+        if (digitalRead(readingGreen) == HIGH) {
+            greenVoltage = measureVoltage(voltagePin) - measureVoltage(groundPin);
+            Serial.print("Green: ");
+            Serial.println(greenVoltage);
+        }
+        else if (digitalRead(readingBlue) == HIGH) {
+            blueVoltage = measureVoltage(voltagePin) - measureVoltage(groundPin);
+            Serial.print("Blue: ");
+            Serial.println(blueVoltage);
+        }
+        else{
+            redVoltage = measureVoltage(voltagePin) - measureVoltage(groundPin);
+            Serial.print("Red: ");
+            Serial.println(redVoltage);
+        }
+    
+        float diffRed = redVoltage - redVoltageInitial;
+        float diffGreen = greenVoltage - greenVoltageInitial;
+        float diffBlue = blueVoltage - blueVoltageInitial;
 
-  delay(1000); // Optional delay between cycles
+        Serial.println("Voltage Differences:");
+        Serial.print("Red Diff: "); Serial.println(diffRed);
+        Serial.print("Green Diff: "); Serial.println(diffGreen);
+        Serial.print("Blue Diff: "); Serial.println(diffBlue);
+
+        if (diffRed > diffGreen && diffRed > diffBlue) {
+            Serial.println("Detected Color: RED");
+        } 
+        else if (diffGreen > diffRed && diffGreen > diffBlue) {
+            Serial.println("Detected Color: GREEN");
+        } 
+        else if (diffBlue > diffRed && diffBlue > diffGreen) {
+            Serial.println("Detected Color: BLUE");
+        } 
+        else {
+            Serial.println("Color unclear or mixed.");
+        }
+    }
 }
-
+    
 float measureVoltage(int pin) {
   delay(100);  // Wait for signal to stabilize
   int raw = analogRead(pin);
