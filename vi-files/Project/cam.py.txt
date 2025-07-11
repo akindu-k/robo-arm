@@ -58,7 +58,7 @@ def detect_grid():
             x, y, w, h = cv2.boundingRect(approx)
             aspect_ratio = w / float(h)
             area = cv2.contourArea(contour)
-            if 0.8 <= aspect_ratio <= 1.2 and area > 100:
+            if 0.8 <= aspect_ratio <= 1.2 and area > 500:
                 center_x = x + w // 2
                 center_y = y + h // 2
                 grid_x = center_x // grid_width
@@ -101,7 +101,7 @@ try:
     print(f"Attempting to process and write to file: {file_path}")
 
     start_time = time.time()
-    duration = 1000000000  # Run for 10 seconds
+    duration = 10  # Run for 10 seconds
     all_values = []  # Array to store all detected values
 
     # Initialize GUI window
